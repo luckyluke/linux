@@ -65,7 +65,11 @@ echo "== boot command line tests =="
 ans=$(LKL_HIJACK_DEBUG=1\
   LKL_HIJACK_BOOT_CMDLINE="mem=100M" ${hijack_script} ip ad)
 if [ -z ${CROSS_COMPILE} ] ; then
-echo "$ans" | grep "100752k"
+    if [ "$($CC -dumpmachine)" = "i686-linux-gnu" ] ; then
+	echo "$ans" | grep "101452k"
+    else
+	echo "$ans" | grep "100752k"
+    fi
 elif [ "${CROSS_COMPILE}" = "arm-linux-androideabi-" ] ; then
 (echo "$ans" | grep "101424k") || true
 elif [ "${CROSS_COMPILE}" = "aarch64-linux-android-" ] ; then

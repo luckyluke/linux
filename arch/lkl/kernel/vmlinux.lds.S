@@ -33,7 +33,12 @@ SECTIONS
 	RW_DATA_SECTION(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
 	VMLINUX_SYMBOL(_edata) = .;
 
+#if defined(__i386__)
+	VMLINUX_SYMBOL(__start___ex_table) = .;
+	VMLINUX_SYMBOL(__stop___ex_table) = .;
+#else
 	EXCEPTION_TABLE(16)
+#endif
 	NOTES
 
 	BSS_SECTION(0, 0, 0)

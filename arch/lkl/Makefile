@@ -2,7 +2,7 @@ include arch/lkl/auto.conf
 
 KBUILD_CFLAGS += -fno-builtin
 
-ifneq (,$(filter $(OUTPUT_FORMAT),elf64-x86-64 elf64-x86-64-freebsd elf32-littlearm elf64-littleaarch64))
+ifneq (,$(filter $(OUTPUT_FORMAT),elf64-x86-64 elf32-i386 elf64-x86-64-freebsd elf32-littlearm elf64-littleaarch64))
 KBUILD_CFLAGS += -fPIC
 else ifneq (,$(filter $(OUTPUT_FORMAT),pe-i386 pe-x86-64 ))
 ifneq ($(OUTPUT_FORMAT),pe-x86-64)
@@ -32,7 +32,15 @@ core-y += arch/lkl/mm/
 all: lkl.o
 
 lkl.o: vmlinux
+ifeq ($(OUTPUT_FORMAT),elf32-i386)
+# objcopy seems to discard some symbols (such as __x86.get_pc_thunk.bx) that are
+# used internally for position independent code on i386. This seems to be fixable
+# defining the required *___ex_table symbols in the linker script.
+# see https://github.com/lkl/linux/issues/341
+	cp vmlinux lkl.o
+else
 	$(OBJCOPY) -R .eh_frame -R .syscall_defs $(foreach sym,$(LKL_ENTRY_POINTS),-G$(prefix)$(sym)) vmlinux lkl.o
+endif
 
 arch/lkl/include/generated/uapi/asm/syscall_defs.h: vmlinux
 	$(OBJCOPY) -j .syscall_defs -O binary --set-section-flags .syscall_defs=alloc $< $@

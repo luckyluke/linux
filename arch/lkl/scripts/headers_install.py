@@ -178,15 +178,22 @@ p = re.compile("enum\s+(\w*)\s*{([^}]*)}", re.M|re.S)
 q = re.compile("(\w+)\s*(,|=[^,]*|$)", re.M|re.S)
 find_enums(p, q, defines)
 
+# needed for i386
+defines.add("__NR_stime")
+
 def process_header(h):
     print("  REPLACE\t%s" % (out_dir + "/" + os.path.basename(h)))
     replace(h)
 
-p = multiprocessing.Pool(args.jobs)
 try:
-    p.map_async(process_header, headers).wait(999999)
-    p.close()
+    p = multiprocessing.Pool(args.jobs)
+    try:
+        p.map_async(process_header, headers).wait(999999)
+        p.close()
+    except:
+        p.terminate()
+    finally:
+        p.join()
 except:
-    p.terminate()
-finally:
-    p.join()
+    for h in headers:
+        process_header(h)
