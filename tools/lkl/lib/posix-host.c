@@ -304,7 +304,7 @@ static void panic(void)
 
 static long _gettid(void)
 {
-#ifdef	__FreeBSD__
+#if	defined(__FreeBSD__) || defined(__GNU__)
 	return (long)pthread_self();
 #else
 	return syscall(SYS_gettid);
