@@ -311,6 +311,9 @@ HOSTCFLAGS  += -Wno-unused-value -Wno-unused-parameter \
 		-Wno-missing-field-initializers -fno-delete-null-pointer-checks
 endif
 
+# hurd lkl
+HOSTCFLAGS += -DPATH_MAX=4096
+
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
 
