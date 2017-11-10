@@ -10,7 +10,7 @@
 #define FUSE_USE_VERSION 26
 #include <fuse.h>
 #include <fuse/fuse_opt.h>
-#include <fuse/fuse_lowlevel.h>
+//#include <fuse/fuse_lowlevel.h>
 #include <lkl.h>
 #include <lkl_host.h>
 
@@ -459,9 +459,9 @@ static int lklfuse_fallocate(const char *path, int mode, off_t offset,
 }
 
 const struct fuse_operations lklfuse_ops = {
-	.flag_nullpath_ok = 1,
-	.flag_nopath = 1,
-	.flag_utime_omit_ok = 1,
+	/* .flag_nullpath_ok = 1, */
+	/* .flag_nopath = 1, */
+	/* .flag_utime_omit_ok = 1, */
 
 	.getattr = lklfuse_getattr,
 	.readlink = lklfuse_readlink,
@@ -501,7 +501,7 @@ const struct fuse_operations lklfuse_ops = {
 	/* .write_buf, (SG io) */
 	/* .read_buf, (SG io) */
 	/* .flock, */
-	.fallocate = lklfuse_fallocate,
+//	.fallocate = lklfuse_fallocate,
 };
 
 static int start_lkl(void)
