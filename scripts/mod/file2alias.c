@@ -58,7 +58,7 @@ struct devtable {
  * handling. The differnces in detail are:
  *  a) we have segments which have sections
  *  b) we need a API call to get the respective section symbols */
-#if defined(__MACH__)
+#if defined(__MACH__) && !defined(__GNU__)
 #include <mach-o/getsect.h>
 
 #define INIT_SECTION(name)  do {					\
