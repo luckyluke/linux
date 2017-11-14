@@ -38,7 +38,7 @@ export srctree
 
 export CFLAGS += -I$(OUTPUT)/include -Iinclude -Wall -g -O2 -Wextra \
 	 -Wno-unused-parameter \
-	 -Wno-missing-field-initializers -fno-strict-aliasing
+	 -Wno-missing-field-initializers -fno-strict-aliasing -DPATH_MAX=4096
 LDFLAGS += -pie
 
 OUTPUT_FORMAT = $(shell $(LD) -r -print-output-format)
