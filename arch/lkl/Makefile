@@ -1,5 +1,9 @@
 include arch/lkl/auto.conf
 
+ifeq ($(shell uname -o),GNU)
+KBUILD_CFLAGS += -fvisibility=hidden
+endif
+
 KBUILD_CFLAGS += -fno-builtin
 
 ifneq (,$(filter $(OUTPUT_FORMAT),elf64-x86-64 elf32-i386 elf64-x86-64-freebsd elf32-littlearm elf64-littleaarch64))
