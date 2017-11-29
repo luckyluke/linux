@@ -27,7 +27,7 @@ endef
 
 QUICK?=0
 VALGRIND_TEXT?=0
-FS_TYPES?=ext4 btrfs vfat xfs
+FS_TYPES?=ext4
 
 # The hijack tests are very time consuming, so run with `QUICK=1 make
 # test` if you want to stick to the unit tests
@@ -46,9 +46,9 @@ endif
 ifneq ($(LKL_ANDROID_TEST),1)
 test:
 	$(call run,)
-	$(call lklfuse)
-	$(HIJACK_TEST)
-	./net.sh
+	#$(call lklfuse)
+	#$(HIJACK_TEST)
+	#./net.sh
 else
 test:
 	dd if=/dev/zero of=disk.img bs=1024 count=102400

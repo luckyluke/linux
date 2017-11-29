@@ -10,9 +10,11 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <net/if.h>
-#include <linux/if_tun.h>
 #include <sys/ioctl.h>
+#ifndef __GNU__
 #include <sys/epoll.h>
+#include <linux/if_tun.h>
+#endif
 #else
 #include <windows.h>
 #endif
@@ -380,7 +382,7 @@ out:
 	return TEST_FAILURE;
 }
 
-#ifndef __MINGW32__
+#if !defined(__MINGW32__) && !defined(__GNU__)
 static int netdev_id = -1;
 
 int test_netdev_add(char *str, int len)
@@ -479,6 +481,7 @@ static int test_pipe2(char *str, int len)
 
 static int test_epoll(char *str, int len)
 {
+#ifndef __GNU__
 	int epoll_fd, pipe_fds[2];
 	int READ_IDX = 0, WRITE_IDX = 1;
 	struct lkl_epoll_event wait_on, read_result;
@@ -539,7 +542,7 @@ static int test_epoll(char *str, int len)
 	/* Already tested reading from pipe2 so no need to do it
 	 * here */
 	snprintf(str, MAX_MSG_LEN, "%s", msg);
-
+#endif
 	return TEST_SUCCESS;
 }
 
@@ -915,7 +918,7 @@ int main(int argc, char **argv)
 
 	if (cla.disk_filename)
 		TEST(disk_add);
-#ifndef __MINGW32__
+#if !defined(__MINGW32__) && !defined(__GNU__)
 	if (cla.tap_ifname)
 		TEST(netdev_add);
 #endif /* __MINGW32__ */
@@ -934,7 +937,7 @@ int main(int argc, char **argv)
 	TEST(fstat);
 	TEST(mkdir);
 	TEST(stat);
-#ifndef __MINGW32__
+#if !defined(__MINGW32__) && !defined(__GNU__)
 	TEST(nanosleep);
 	if (netdev_id >= 0)
 		TEST(netdev_ifup);

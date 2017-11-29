@@ -101,7 +101,7 @@ ALL_LIBRARIES := $(OUTPUT)liblkl.a $(OUTPUT)liblkl$(SOSUF)
 else
 # missing functions in libfuse-hurd1
 ALL_PROGRAMS := $(OUTPUT)cptofs$(EXESUF) $(OUTPUT)cpfromfs$(EXESUF) $(OUTPUT)fs2tar$(EXESUF)
-ALL_LIBRARIES := $(OUTPUT)liblkl.a $(OUTPUT)liblkl$(SOSUF) $(OUTPUT)liblkl-hijack$(SOSUF)
+ALL_LIBRARIES := $(OUTPUT)liblkl.a $(OUTPUT)liblkl$(SOSUF)
 endif
 
 static: $(OUTPUT)liblkl.a
@@ -140,12 +140,14 @@ ifneq (,$(filter $(OUTPUT_DEF),__ANDROID__))
   $(OUTPUT)tests/boot: LDLIBS += -lc
 endif
 $(OUTPUT)tests/net-test: $(OUTPUT)tests/net-test-in.o $(OUTPUT)liblkl.a
-$(TEST_TARGETS): $(OUTPUT)tests/boot $(OUTPUT)tests/net-test
+$(TEST_TARGETS): $(OUTPUT)tests/boot
 
 # because of libdl, liblkl-hijack will not compile on windows
 # fortunately, the test target will handle a missing libhijack.so correctly
 ifeq (,$(filter $(OUTPUT_FORMAT),pe-i386))
+ifneq ($(shell uname -o),GNU)
   test: liblkl-hijack$(SOSUF)
+endif
 endif
 
 $(OUTPUT)%-in.o: $(OUTPUT)lib/lkl.o FORCE
