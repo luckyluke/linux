@@ -33,7 +33,7 @@
 *.o
 *.o.*
 *.order
-*.patch
+#*.patch
 *.s
 *.so
 *.so.dbg
@@ -66,7 +66,7 @@ modules.builtin
 #
 # Debian directory (make deb-pkg)
 #
-/debian/
+# /debian/
 
 #
 # Snap directory (make snap-pkg)
@@ -98,8 +98,8 @@ arch/*/include/generated
 patches-*
 
 # quilt's files
-patches
-series
+#patches
+#series
 
 # cscope files
 cscope.*
