@@ -1,0 +1,21 @@
+From: Luca Dariz <luca@orpolo.org>
+Date: Tue, 15 Jan 2019 22:44:21 +0100
+Subject: make cleanable debian
+
+---
+ scripts/package/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/package/Makefile b/scripts/package/Makefile
+index 73503eb..d79a3ff 100644
+--- a/scripts/package/Makefile
++++ b/scripts/package/Makefile
+@@ -82,7 +82,7 @@ bindeb-pkg: FORCE
+ intdeb-pkg: FORCE
+ 	+$(CONFIG_SHELL) $(srctree)/scripts/package/builddeb
+ 
+-clean-dirs += $(objtree)/debian/
++# clean-dirs += $(objtree)/debian/
+ 
+ # snap-pkg
+ # ---------------------------------------------------------------------------

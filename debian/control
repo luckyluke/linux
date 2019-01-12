@@ -1,0 +1,22 @@
+Source: lkl
+Priority: optional
+Maintainer: Luca <luca@tubinga>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Section: libs
+Homepage: https://lkl.github.io/
+#Vcs-Git: https://anonscm.debian.org/collab-maint/lkl.git
+#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/lkl.git
+
+Package: liblkl-dev
+Section: libdevel
+Architecture: any
+Depends: liblkl (= ${binary:Version}), ${misc:Depends}
+Description: Port of the Linux kernel as a library.
+ <insert long description, indented with spaces>
+
+Package: liblkl
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Port of the Linux kernel as a library.
+ <insert long description, indented with spaces>

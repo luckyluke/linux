@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+export SHELL = bash
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	rm -f debian/*.debhelper.log
+	dh $@ 
+
+override_dh_auto_clean:
+	make -C tools/lkl clean-conf
+	rm -f tools/lkl/include/lkl_autoconf.h tools/lkl/tests/autoconf.sh
+	ARCH=lkl make mrproper || true
+
+override_dh_auto_build-arch:
+	dh_testdir -a
+	make -C tools/lkl
+
+override_dh_auto_install:
+	make -C tools/lkl install DESTDIR=$(CURDIR)/debian/tmp PREFIX=/usr
+
+override_dh_auto_test:
+#	make -C tools/lkl run-tests # TODO, they seem to need sudo and other packages
