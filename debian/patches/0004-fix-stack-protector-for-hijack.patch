@@ -1,0 +1,27 @@
+From: Luca Dariz <luca.dariz@gmail.com>
+Date: Mon, 21 Jan 2019 01:04:39 +0100
+Subject: fix stack protector for hijack.
+
+---
+ tools/lkl/lib/hijack/init.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/tools/lkl/lib/hijack/init.c b/tools/lkl/lib/hijack/init.c
+index e35b311..fec54c5 100644
+--- a/tools/lkl/lib/hijack/init.c
++++ b/tools/lkl/lib/hijack/init.c
+@@ -243,3 +243,14 @@ hijack_fini(void)
+ 	if (err)
+ 		fprintf(stderr, "lkl_sys_halt: %s\n", lkl_strerror(err));
+ }
++
++
++#include <sys/cdefs.h>
++extern void __stack_chk_fail (void) __attribute__ ((noreturn));
++/* On some architectures, this helps needless PIC pointer setup
++   that would be needed just for the __stack_chk_fail call.  */
++void __attribute__ ((noreturn))
++__stack_chk_fail_local (void)
++{
++  __stack_chk_fail ();
++}
