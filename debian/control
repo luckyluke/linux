@@ -1,6 +1,6 @@
 Source: lkl
 Priority: optional
-Maintainer: Luca <luca@tubinga>
+Maintainer: Luca <luca@orpolo.org>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.8
 Section: libs
@@ -8,15 +8,36 @@ Homepage: https://lkl.github.io/
 #Vcs-Git: https://anonscm.debian.org/collab-maint/lkl.git
 #Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/lkl.git
 
-Package: liblkl-dev
-Section: libdevel
-Architecture: any
-Depends: liblkl (= ${binary:Version}), ${misc:Depends}
-Description: Port of the Linux kernel as a library.
- <insert long description, indented with spaces>
-
 Package: liblkl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Port of the Linux kernel as a library.
- <insert long description, indented with spaces>
+ LKL (Linux Kernel Library) is aiming to allow reusing the Linux kernel code as
+ extensively as possible with minimal effort and reduced maintenance overhead.
+ .
+ Examples of how LKL can be used are: creating userspace applications (running
+ on Linux and other operating systems) that can read or write Linux filesystems
+ or can use the Linux networking stack, creating kernel drivers for other
+ operating  systems that can read Linux filesystems, bootloaders support for
+ reading/writing Linux filesystems, etc.
+ .
+ With LKL, the kernel code is compiled into an object file that can be directly
+ linked by applications. The API offered by LKL is based on the Linux system
+ call interface.
+ .
+ LKL is implemented as an architecture port in arch/lkl. It uses host operations
+ defined by the application or a host library (tools/lkl/lib).
+
+Package: liblkl-dev
+Section: libdevel
+Architecture: any
+Depends: liblkl (= ${binary:Version}), ${misc:Depends}
+Description: Port of the Linux kernel as a library (development files).
+ This package includes the header files and the static libraries.
+
+Package: liblkl-examples
+Section: libdevel
+Architecture: any
+Depends: liblkl (= ${binary:Version}), ${misc:Depends}
+Description: Port of the Linux kernel as a library (examples).
+ This package includes the boot, dist net-test and lklfuse examples.

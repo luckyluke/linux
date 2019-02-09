@@ -1,18 +1,14 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: lkl
-Source: <url://example.com>
+Source: https://lkl.github.io/
 
 Files: *
-Copyright: <years> <put author's name and email here>
-           <years> <likewise for another author>
-License: GPLv2 with Linux modifications
- <Put the license of the package here indented by 1 space>
- <This follows the format of Description: lines in control file>
- .
- <Including paragraphs>
+Copyright: 1991-2019 Linus Torvalds and many others
+License: GPL-2.0 WITH Linux-syscall-note
+ see COPYING
 
 Files: debian/*
-Copyright: 2019 Luca Dariz <luca@debhurd>
+Copyright: 2019 Luca Dariz <luca@orpolo.org>
 License: BSD
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions
