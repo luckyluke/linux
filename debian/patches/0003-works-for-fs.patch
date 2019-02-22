@@ -290,7 +290,7 @@ index 4a6b895..cb84ac6 100644
 +progs-y += tests/net-test ####
  
 diff --git a/tools/lkl/lib/hijack/hijack.c b/tools/lkl/lib/hijack/hijack.c
-index 2ba5c50..f98f0fd 100644
+index 2ba5c50..f98f0fd5 100644
 --- a/tools/lkl/lib/hijack/hijack.c
 +++ b/tools/lkl/lib/hijack/hijack.c
 @@ -17,7 +17,9 @@
@@ -329,7 +329,7 @@ index 2ba5c50..f98f0fd 100644
  int eventfd(unsigned int count, int flags)
  {
 diff --git a/tools/lkl/lib/hijack/xlate.c b/tools/lkl/lib/hijack/xlate.c
-index 03ccc62..8b906f4 100644
+index 03ccc629..8b906f4 100644
 --- a/tools/lkl/lib/hijack/xlate.c
 +++ b/tools/lkl/lib/hijack/xlate.c
 @@ -12,6 +12,7 @@

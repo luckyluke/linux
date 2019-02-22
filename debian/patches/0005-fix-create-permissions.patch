@@ -1,0 +1,113 @@
+From: Luca Dariz <luca.dariz@gmail.com>
+Date: Sat, 23 Feb 2019 00:01:42 +0100
+Subject: fix create permissions
+
+---
+ tools/lkl/lklfuse.c | 61 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 1 deletion(-)
+
+diff --git a/tools/lkl/lklfuse.c b/tools/lkl/lklfuse.c
+index 5ab2572..5f94ab8 100644
+--- a/tools/lkl/lklfuse.c
++++ b/tools/lkl/lklfuse.c
+@@ -124,6 +124,61 @@ static void lklfuse_xlat_stat(const struct lkl_stat *in, struct stat *st)
+ 	st->st_ctim.tv_nsec = in->st_ctime_nsec;
+ }
+ 
++static int lklfuse_xlat_err(long err)
++{
++	int e;
++	switch (-err)
++	{
++	case 0: e = 0; break;
++	case LKL_EPERM   : e = EPERM; break;
++	case LKL_ENOENT  : e = ENOENT; break;
++	case LKL_ESRCH   : e = ESRCH; break;
++	case LKL_EINTR   : e = EINTR; break;
++	case LKL_EIO     : e = EIO; break;
++	case LKL_ENXIO   : e = ENXIO; break;
++	case LKL_E2BIG   : e = E2BIG; break;
++	case LKL_ENOEXEC : e = ENOEXEC; break;
++	case LKL_EBADF   : e = EBADF; break;
++	case LKL_ECHILD  : e = ECHILD; break;
++	case LKL_EAGAIN  : e = EAGAIN; break;
++	case LKL_ENOMEM  : e = ENOMEM; break;
++	case LKL_EACCES  : e = EACCES; break;
++	case LKL_EFAULT  : e = EFAULT; break;
++	case LKL_ENOTBLK : e = ENOTBLK; break;
++	case LKL_EBUSY   : e = EBUSY; break;
++	case LKL_EEXIST  : e = EEXIST; break;
++	case LKL_EXDEV   : e = EXDEV; break;
++	case LKL_ENODEV  : e = ENODEV; break;
++	case LKL_ENOTDIR : e = ENOTDIR; break;
++	case LKL_EISDIR  : e = EISDIR; break;
++	case LKL_EINVAL  : e = EINVAL; break;
++	case LKL_ENFILE  : e = ENFILE; break;
++	case LKL_EMFILE  : e = EMFILE; break;
++	case LKL_ENOTTY  : e = ENOTTY; break;
++	case LKL_ETXTBSY : e = ETXTBSY; break;
++	case LKL_EFBIG   : e = EFBIG; break;
++	case LKL_ENOSPC  : e = ENOSPC; break;
++	case LKL_ESPIPE  : e = ESPIPE; break;
++	case LKL_EROFS   : e = EROFS; break;
++	case LKL_EMLINK  : e = EMLINK; break;
++	case LKL_EPIPE   : e = EPIPE; break;
++	case LKL_EDOM    : e = EDOM; break;
++	case LKL_ERANGE  : e = ERANGE; break;
++	default:
++		e = EIEIO;
++		break;
++	}
++	fprintf(stderr, "called %s: %ld -> %x\n", __func__, -err, e);
++	return -e;
++}
++
++static void lklfuse_setfsugid(void)
++{
++	struct fuse_context *ctx = fuse_get_context();
++	lkl_sys_setfsuid(ctx->uid);
++	lkl_sys_setfsgid(ctx->gid);
++}
++
+ static int lklfuse_fgetattr(const char *path, struct stat *st,
+ 	                    struct fuse_file_info *fi)
+ {
+@@ -145,7 +200,7 @@ static int lklfuse_getattr(const char *path, struct stat *st)
+ 
+ 	ret = lkl_sys_lstat(path, &lkl_stat);
+ 	if (ret)
+-		return ret;
++		return lklfuse_xlat_err(ret);
+ 
+ 	lklfuse_xlat_stat(&lkl_stat, st);
+ 	return 0;
+@@ -169,11 +224,13 @@ static int lklfuse_readlink(const char *path, char *buf, size_t len)
+ 
+ static int lklfuse_mknod(const char *path, mode_t mode, dev_t dev)
+ {
++	lklfuse_setfsugid();
+ 	return lkl_sys_mknod(path, mode, dev);
+ }
+ 
+ static int lklfuse_mkdir(const char *path, mode_t mode)
+ {
++	lklfuse_setfsugid();
+ 	return lkl_sys_mkdir(path, mode);
+ }
+ 
+@@ -189,6 +246,7 @@ static int lklfuse_rmdir(const char *path)
+ 
+ static int lklfuse_symlink(const char *oldname, const char *newname)
+ {
++	lklfuse_setfsugid();
+ 	return lkl_sys_symlink(oldname, newname);
+ }
+ 
+@@ -237,6 +295,7 @@ static int lklfuse_open3(const char *path, bool create, mode_t mode,
+ 	if (create)
+ 		flags |= LKL_O_CREAT;
+ 
++	lklfuse_setugid();
+ 	ret = lkl_sys_open(path, flags, mode);
+ 	if (ret < 0)
+ 		return ret;
