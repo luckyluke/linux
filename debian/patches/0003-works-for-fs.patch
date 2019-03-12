@@ -20,12 +20,12 @@ wip net
  12 files changed, 192 insertions(+), 28 deletions(-)
  create mode 100644 arch/lkl/configs/gnu_defconfig
 
-diff --git a/arch/lkl/Kconfig b/arch/lkl/Kconfig
-index 948dfb2..8fe0862 100644
---- a/arch/lkl/Kconfig
-+++ b/arch/lkl/Kconfig
+Index: linux/arch/lkl/Kconfig
+===================================================================
+--- linux.orig/arch/lkl/Kconfig
++++ linux/arch/lkl/Kconfig
 @@ -22,23 +22,7 @@ config LKL
-        select 64BIT if OUTPUT_FORMAT = "elf64-littleaarch64"
+        select 64BIT if "$(OUTPUT_FORMAT)" = "elf64-littleaarch64"
         select NET
         select MULTIUSER
 -       select INET
@@ -47,11 +47,11 @@ index 948dfb2..8fe0862 100644
 -       select IPV6_ADVANCED_ROUTER
         select ARCH_NO_COHERENT_DMA_MMAP
  
- config OUTPUTFORMAT
-diff --git a/arch/lkl/Makefile b/arch/lkl/Makefile
-index dc59705..d086bd3 100644
---- a/arch/lkl/Makefile
-+++ b/arch/lkl/Makefile
+ config OUTPUT_FORMAT
+Index: linux/arch/lkl/Makefile
+===================================================================
+--- linux.orig/arch/lkl/Makefile
++++ linux/arch/lkl/Makefile
 @@ -22,6 +22,13 @@ else # e.g., FreeBSD
  NPROC=$(shell sysctl -n hw.ncpu)
  endif
@@ -66,11 +66,10 @@ index dc59705..d086bd3 100644
  LDFLAGS_vmlinux += -r
  LKL_ENTRY_POINTS := lkl_start_kernel lkl_sys_halt lkl_syscall lkl_trigger_irq \
  	lkl_get_free_irq lkl_put_irq lkl_is_running lkl_bug lkl_printf
-diff --git a/arch/lkl/configs/gnu_defconfig b/arch/lkl/configs/gnu_defconfig
-new file mode 100644
-index 0000000..b42f120
+Index: linux/arch/lkl/configs/gnu_defconfig
+===================================================================
 --- /dev/null
-+++ b/arch/lkl/configs/gnu_defconfig
++++ linux/arch/lkl/configs/gnu_defconfig
 @@ -0,0 +1,95 @@
 +# CONFIG_LOCALVERSION_AUTO is not set
 +CONFIG_NO_HZ_IDLE=y
@@ -167,10 +166,10 @@ index 0000000..b42f120
 +CONFIG_DEBUG_INFO_REDUCED=y
 +# CONFIG_ENABLE_WARN_DEPRECATED is not set
 +# CONFIG_ENABLE_MUST_CHECK is not set
-diff --git a/arch/lkl/defconfig b/arch/lkl/defconfig
-index f91380b..188e04d 100644
---- a/arch/lkl/defconfig
-+++ b/arch/lkl/defconfig
+Index: linux/arch/lkl/defconfig
+===================================================================
+--- linux.orig/arch/lkl/defconfig
++++ linux/arch/lkl/defconfig
 @@ -93,3 +93,20 @@ CONFIG_DEBUG_INFO=y
  CONFIG_DEBUG_INFO_REDUCED=y
  # CONFIG_ENABLE_WARN_DEPRECATED is not set
@@ -192,10 +191,10 @@ index f91380b..188e04d 100644
 +CONFIG_IPV6_ROUTE_MULTIPATH=y
 +CONFIG_IP_ADVANCED_ROUTER=y
 +CONFIG_IPV6_ADVANCED_ROUTER=y
-diff --git a/arch/lkl/scripts/headers_install.py b/arch/lkl/scripts/headers_install.py
-index 22a6629..9157c40 100755
---- a/arch/lkl/scripts/headers_install.py
-+++ b/arch/lkl/scripts/headers_install.py
+Index: linux/arch/lkl/scripts/headers_install.py
+===================================================================
+--- linux.orig/arch/lkl/scripts/headers_install.py
++++ linux/arch/lkl/scripts/headers_install.py
 @@ -185,11 +185,14 @@ def process_header(h):
      print("  REPLACE\t%s" % (out_dir + "/" + os.path.basename(h)))
      replace(h)
@@ -219,11 +218,11 @@ index 22a6629..9157c40 100755
 +
 +for h in headers:
 +    process_header(h)
-diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
-index 9bdf597..97da28c 100644
---- a/lib/raid6/algos.c
-+++ b/lib/raid6/algos.c
-@@ -159,6 +159,20 @@ static inline const struct raid6_calls *raid6_choose_gen(
+Index: linux/lib/raid6/algos.c
+===================================================================
+--- linux.orig/lib/raid6/algos.c
++++ linux/lib/raid6/algos.c
+@@ -159,6 +159,20 @@ static inline const struct raid6_calls *
  	const struct raid6_calls *const *algo;
  	const struct raid6_calls *best;
  
@@ -244,7 +243,7 @@ index 9bdf597..97da28c 100644
  	for (bestgenperf = 0, bestxorperf = 0, best = NULL, algo = raid6_algos; *algo; algo++) {
  		if (!best || (*algo)->prefer >= best->prefer) {
  			if ((*algo)->valid && !(*algo)->valid())
-@@ -210,6 +224,7 @@ static inline const struct raid6_calls *raid6_choose_gen(
+@@ -210,6 +224,7 @@ static inline const struct raid6_calls *
  				(perf*HZ) >> (20-16+RAID6_TIME_JIFFIES_LG2+1));
  		}
  	}
@@ -252,10 +251,10 @@ index 9bdf597..97da28c 100644
  
  	if (best) {
  		pr_info("raid6: using algorithm %s gen() %ld MB/s\n",
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index b9beeaa..cfc4d9b 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
+Index: linux/scripts/mod/file2alias.c
+===================================================================
+--- linux.orig/scripts/mod/file2alias.c
++++ linux/scripts/mod/file2alias.c
 @@ -58,7 +58,7 @@ struct devtable {
   * handling. The differnces in detail are:
   *  a) we have segments which have sections
@@ -265,10 +264,10 @@ index b9beeaa..cfc4d9b 100644
  #include <mach-o/getsect.h>
  
  #define INIT_SECTION(name)  do {					\
-diff --git a/tools/lkl/Makefile.autoconf b/tools/lkl/Makefile.autoconf
-index eeab41f..96122bf 100644
---- a/tools/lkl/Makefile.autoconf
-+++ b/tools/lkl/Makefile.autoconf
+Index: linux/tools/lkl/Makefile.autoconf
+===================================================================
+--- linux.orig/tools/lkl/Makefile.autoconf
++++ linux/tools/lkl/Makefile.autoconf
 @@ -46,7 +46,7 @@ endef
  
  define posix_host
@@ -278,21 +277,21 @@ index eeab41f..96122bf 100644
    LDFLAGS += -pie
    CFLAGS += -fPIC -pthread
    SOSUF := .so
-diff --git a/tools/lkl/Targets b/tools/lkl/Targets
-index 4a6b895..cb84ac6 100644
---- a/tools/lkl/Targets
-+++ b/tools/lkl/Targets
-@@ -21,5 +21,5 @@ LDLIBS_cptofs-$(LKL_HOST_CONFIG_NEEDS_LARGP) += -largp
+Index: linux/tools/lkl/Targets
+===================================================================
+--- linux.orig/tools/lkl/Targets
++++ linux/tools/lkl/Targets
+@@ -21,5 +21,5 @@ LDLIBS_cptofs-$(LKL_HOST_CONFIG_NEEDS_LA
  
  progs-y += tests/boot
  progs-y += tests/disk
 -progs-y += tests/net-test
 +progs-y += tests/net-test ####
  
-diff --git a/tools/lkl/lib/hijack/hijack.c b/tools/lkl/lib/hijack/hijack.c
-index 2ba5c50..f98f0fd5 100644
---- a/tools/lkl/lib/hijack/hijack.c
-+++ b/tools/lkl/lib/hijack/hijack.c
+Index: linux/tools/lkl/lib/hijack/hijack.c
+===================================================================
+--- linux.orig/tools/lkl/lib/hijack/hijack.c
++++ linux/tools/lkl/lib/hijack/hijack.c
 @@ -17,7 +17,9 @@
  #include <dlfcn.h>
  #include <sys/socket.h>
@@ -320,7 +319,7 @@ index 2ba5c50..f98f0fd5 100644
  HOST_CALL(epoll_create);
  int epoll_create(int size)
  {
-@@ -540,6 +545,7 @@ int epoll_wait(int epfd, struct epoll_event *events,
+@@ -540,6 +545,7 @@ int epoll_wait(int epfd, struct epoll_ev
  
  	return ret;
  }
@@ -328,10 +327,10 @@ index 2ba5c50..f98f0fd5 100644
  
  int eventfd(unsigned int count, int flags)
  {
-diff --git a/tools/lkl/lib/hijack/xlate.c b/tools/lkl/lib/hijack/xlate.c
-index 03ccc629..8b906f4 100644
---- a/tools/lkl/lib/hijack/xlate.c
-+++ b/tools/lkl/lib/hijack/xlate.c
+Index: linux/tools/lkl/lib/hijack/xlate.c
+===================================================================
+--- linux.orig/tools/lkl/lib/hijack/xlate.c
++++ linux/tools/lkl/lib/hijack/xlate.c
 @@ -12,6 +12,7 @@
  
  long lkl_set_errno(long err)
@@ -537,7 +536,7 @@ index 03ccc629..8b906f4 100644
  #ifdef SO_WIFI_STATUS
  	case SO_WIFI_STATUS:
  		return LKL_SO_WIFI_STATUS;
-@@ -555,10 +586,12 @@ unsigned long lkl_ioctl_req_xlate(unsigned long req)
+@@ -555,10 +586,12 @@ unsigned long lkl_ioctl_req_xlate(unsign
  		return LKL_SIOCGPGRP;
  	case SIOCATMARK:
  		return LKL_SIOCATMARK;
@@ -576,10 +575,10 @@ index 03ccc629..8b906f4 100644
  	}
  
  	return cmd;
-diff --git a/tools/lkl/lib/posix-host.c b/tools/lkl/lib/posix-host.c
-index db63ed7..2c6f922 100644
---- a/tools/lkl/lib/posix-host.c
-+++ b/tools/lkl/lib/posix-host.c
+Index: linux/tools/lkl/lib/posix-host.c
+===================================================================
+--- linux.orig/tools/lkl/lib/posix-host.c
++++ linux/tools/lkl/lib/posix-host.c
 @@ -304,7 +304,7 @@ static void panic(void)
  
  static long _gettid(void)

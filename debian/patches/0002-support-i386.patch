@@ -9,10 +9,10 @@ Signed-off-by: Luca Dariz <luca.dariz@gmail.com>
  tools/lkl/include/lkl.h             |  2 +-
  3 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/lkl/Makefile b/arch/lkl/Makefile
-index 88d47de..dc59705 100644
---- a/arch/lkl/Makefile
-+++ b/arch/lkl/Makefile
+Index: linux/arch/lkl/Makefile
+===================================================================
+--- linux.orig/arch/lkl/Makefile
++++ linux/arch/lkl/Makefile
 @@ -2,7 +2,7 @@ include arch/lkl/auto.conf
  
  KBUILD_CFLAGS += -fno-builtin
@@ -37,11 +37,11 @@ index 88d47de..dc59705 100644
  
  core-y += arch/lkl/kernel/
  core-y += arch/lkl/mm/
-diff --git a/arch/lkl/scripts/headers_install.py b/arch/lkl/scripts/headers_install.py
-index e8f1347..22a6629 100755
---- a/arch/lkl/scripts/headers_install.py
-+++ b/arch/lkl/scripts/headers_install.py
-@@ -178,6 +178,9 @@ p = re.compile("enum\s+(\w*)\s*{([^}]*)}", re.M|re.S)
+Index: linux/arch/lkl/scripts/headers_install.py
+===================================================================
+--- linux.orig/arch/lkl/scripts/headers_install.py
++++ linux/arch/lkl/scripts/headers_install.py
+@@ -178,6 +178,9 @@ p = re.compile("enum\s+(\w*)\s*{([^}]*)}
  q = re.compile("(\w+)\s*(,|=[^,]*|$)", re.M|re.S)
  find_enums(p, q, defines)
  
@@ -51,10 +51,10 @@ index e8f1347..22a6629 100755
  def process_header(h):
      print("  REPLACE\t%s" % (out_dir + "/" + os.path.basename(h)))
      replace(h)
-diff --git a/tools/lkl/include/lkl.h b/tools/lkl/include/lkl.h
-index 3ec9c2f..77ff77e 100644
---- a/tools/lkl/include/lkl.h
-+++ b/tools/lkl/include/lkl.h
+Index: linux/tools/lkl/include/lkl.h
+===================================================================
+--- linux.orig/tools/lkl/include/lkl.h
++++ linux/tools/lkl/include/lkl.h
 @@ -35,7 +35,7 @@ extern "C" {
  int inet_pton(int af, const char *src, void *dst);
  #endif

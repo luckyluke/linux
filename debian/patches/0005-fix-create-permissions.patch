@@ -6,11 +6,11 @@ Subject: fix create permissions
  tools/lkl/lklfuse.c | 61 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
  1 file changed, 60 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lkl/lklfuse.c b/tools/lkl/lklfuse.c
-index 5ab2572..5f94ab8 100644
---- a/tools/lkl/lklfuse.c
-+++ b/tools/lkl/lklfuse.c
-@@ -124,6 +124,61 @@ static void lklfuse_xlat_stat(const struct lkl_stat *in, struct stat *st)
+Index: linux/tools/lkl/lklfuse.c
+===================================================================
+--- linux.orig/tools/lkl/lklfuse.c
++++ linux/tools/lkl/lklfuse.c
+@@ -124,6 +124,61 @@ static void lklfuse_xlat_stat(const stru
  	st->st_ctim.tv_nsec = in->st_ctime_nsec;
  }
  
@@ -72,7 +72,7 @@ index 5ab2572..5f94ab8 100644
  static int lklfuse_fgetattr(const char *path, struct stat *st,
  	                    struct fuse_file_info *fi)
  {
-@@ -145,7 +200,7 @@ static int lklfuse_getattr(const char *path, struct stat *st)
+@@ -145,7 +200,7 @@ static int lklfuse_getattr(const char *p
  
  	ret = lkl_sys_lstat(path, &lkl_stat);
  	if (ret)
@@ -81,7 +81,7 @@ index 5ab2572..5f94ab8 100644
  
  	lklfuse_xlat_stat(&lkl_stat, st);
  	return 0;
-@@ -169,11 +224,13 @@ static int lklfuse_readlink(const char *path, char *buf, size_t len)
+@@ -169,11 +224,13 @@ static int lklfuse_readlink(const char *
  
  static int lklfuse_mknod(const char *path, mode_t mode, dev_t dev)
  {
@@ -95,7 +95,7 @@ index 5ab2572..5f94ab8 100644
  	return lkl_sys_mkdir(path, mode);
  }
  
-@@ -189,6 +246,7 @@ static int lklfuse_rmdir(const char *path)
+@@ -189,6 +246,7 @@ static int lklfuse_rmdir(const char *pat
  
  static int lklfuse_symlink(const char *oldname, const char *newname)
  {
@@ -103,11 +103,11 @@ index 5ab2572..5f94ab8 100644
  	return lkl_sys_symlink(oldname, newname);
  }
  
-@@ -237,6 +295,7 @@ static int lklfuse_open3(const char *path, bool create, mode_t mode,
+@@ -238,6 +296,7 @@ static int lklfuse_open3(const char *pat
  	if (create)
  		flags |= LKL_O_CREAT;
  
-+	lklfuse_setugid();
++	lklfuse_setfsugid();
  	ret = lkl_sys_open(path, flags, mode);
  	if (ret < 0)
  		return ret;

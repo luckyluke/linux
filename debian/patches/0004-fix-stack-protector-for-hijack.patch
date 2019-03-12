@@ -6,10 +6,10 @@ Subject: fix stack protector for hijack.
  tools/lkl/lib/hijack/init.c | 11 +++++++++++
  1 file changed, 11 insertions(+)
 
-diff --git a/tools/lkl/lib/hijack/init.c b/tools/lkl/lib/hijack/init.c
-index e35b311..fec54c5 100644
---- a/tools/lkl/lib/hijack/init.c
-+++ b/tools/lkl/lib/hijack/init.c
+Index: linux/tools/lkl/lib/hijack/init.c
+===================================================================
+--- linux.orig/tools/lkl/lib/hijack/init.c
++++ linux/tools/lkl/lib/hijack/init.c
 @@ -243,3 +243,14 @@ hijack_fini(void)
  	if (err)
  		fprintf(stderr, "lkl_sys_halt: %s\n", lkl_strerror(err));
