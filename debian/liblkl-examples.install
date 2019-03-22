@@ -1,1 +1,4 @@
-usr/bin/*
+#!/usr/bin/dh-exec
+usr/bin/lklfuse
+usr/bin/boot => /usr/bin/lklboot
+usr/bin/disk => /usr/bin/lkldisk
